@@ -13,6 +13,10 @@ toolchain_type(
     name = "toolchain",
 )
 
+toolchain_type(
+    name = "wasm_toolchain",
+)
+
 bzl_library(
     name = "rules",
     srcs = glob(["**/*.bzl"]),

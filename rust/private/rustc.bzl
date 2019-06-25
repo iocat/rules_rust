@@ -33,6 +33,7 @@ CrateInfo = provider(
         "srcs": "List[File]: All source Files that are part of the crate.",
         "deps": "List[Provider]: This crate's (rust or cc) dependencies' providers.",
         "output": "File: The output File that will be produced, depends on crate type.",
+        "wasm_output": "File: The output File that will be produced, depends on crate type. Built for the wasm32-unknown-unknown target if requested.",
         "edition": "str: The edition of this crate.",
     },
 )
@@ -44,6 +45,7 @@ DepInfo = provider(
         "transitive_dylibs": "depset[File]",
         "transitive_staticlibs": "depset[File]",
         "transitive_libs": "List[File]: All transitive dependencies, not filtered by type.",
+        "transitive_wasm_libs": "List[File]: All transitive WebAssembly dependencies, not filtered by type.",
     },
 )
 
@@ -126,12 +128,18 @@ def collect_deps(deps, toolchain):
         transitive = [transitive_staticlibs, transitive_dylibs],
     )
 
+    transitive_wasm_libs = depset(
+        [c.wasm_output for c in transitive_crates.to_list() if c.wasm_output],
+        transitive = [transitive_staticlibs, transitive_dylibs],
+    )
+
     return DepInfo(
         direct_crates = depset(direct_crates),
         transitive_crates = transitive_crates,
         transitive_dylibs = transitive_dylibs,
         transitive_staticlibs = transitive_staticlibs,
         transitive_libs = transitive_libs.to_list(),
+        transitive_wasm_libs = transitive_wasm_libs.to_list(),
     )
 
 def _get_linker_and_args(ctx, rpaths):
@@ -172,11 +180,67 @@ def _get_linker_and_args(ctx, rpaths):
 
     return ld, link_args
 
+def _make_args(
+    ctx,
+    crate_info,
+    output_hash,
+    toolchain,
+    linker_script,
+    rust_flags,
+    dep_info,
+):
+    output_dir = crate_info.output.dirname
+
+    args = ctx.actions.args()
+    args.add(crate_info.root)
+    args.add("--crate-name=" + crate_info.name)
+    args.add("--crate-type=" + crate_info.type)
+
+    # Mangle symbols to disambiguate crates with the same name
+    extra_filename = "-" + output_hash if output_hash else ""
+    args.add("--codegen=metadata=" + extra_filename)
+    args.add("--out-dir=" + output_dir)
+    args.add("--codegen=extra-filename=" + extra_filename)
+
+    compilation_mode = _get_compilation_mode_opts(ctx, toolchain)
+    args.add("--codegen=opt-level=" + compilation_mode.opt_level)
+    args.add("--codegen=debuginfo=" + compilation_mode.debug_info)
+
+    args.add("--emit=dep-info,link")
+    args.add("--color=always")
+    args.add("--target=" + toolchain.target_triple)
+    if hasattr(ctx.attr, "crate_features"):
+        args.add_all(getattr(ctx.attr, "crate_features"), before_each = "--cfg", format_each = 'feature="%s"')
+    if hasattr(ctx.attr, "linker_script") and linker_script != None:
+        args.add(linker_script.path, format = "--codegen=link-arg=-T%s")
+    args.add_all(rust_flags)
+    args.add_all(getattr(ctx.attr, "rustc_flags", []))
+    add_edition_flags(args, crate_info)
+
+    # Link!
+
+    # Rust's built-in linker can handle linking wasm files. We don't want to attempt to use the cc
+    # linker since it won't understand.
+    if toolchain.target_arch == "wasm32":
+        add_wasm_crate_link_flags(args, dep_info)
+    else:
+        rpaths = _compute_rpaths(toolchain, output_dir, dep_info)
+        ld, link_args = _get_linker_and_args(ctx, rpaths)
+        args.add("--codegen=linker=" + ld)
+        args.add_joined("--codegen", link_args, join_with = " ", format_joined = "link-args=%s")
+        add_crate_link_flags(args, dep_info)
+
+    add_native_link_flags(args, dep_info)
+
+    return args
+
 def rustc_compile_action(
         ctx,
         toolchain,
+        wasm_toolchain,
         crate_info,
         output_hash = None,
+        wasm_output_hash = None,
         rust_flags = []):
     """
     Constructs the rustc command used to build the current target.
@@ -187,7 +251,6 @@ def rustc_compile_action(
                      - DepInfo: The transitive dependencies of this crate.
                      - DefaultInfo: The output file for this crate, and its runfiles.
     """
-    output_dir = crate_info.output.dirname
 
     dep_info = collect_deps(
         crate_info.deps,
@@ -218,41 +281,21 @@ def rustc_compile_action(
         ],
     )
 
-    args = ctx.actions.args()
-    args.add(crate_info.root)
-    args.add("--crate-name=" + crate_info.name)
-    args.add("--crate-type=" + crate_info.type)
+    wasm_compile_inputs = depset(
+        crate_info.srcs +
+        getattr(ctx.files, "data", []) +
+        dep_info.transitive_wasm_libs +
+        [toolchain.rustc] +
+        toolchain.crosstool_files +
+        ([] if linker_script == None else [linker_script]),
+        transitive = [
+            toolchain.rustc_lib.files,
+            toolchain.rust_lib.files,
+            linker_depset,
+        ],
+    )
 
-    # Mangle symbols to disambiguate crates with the same name
-    extra_filename = "-" + output_hash if output_hash else ""
-    args.add("--codegen=metadata=" + extra_filename)
-    args.add("--out-dir=" + output_dir)
-    args.add("--codegen=extra-filename=" + extra_filename)
-
-    compilation_mode = _get_compilation_mode_opts(ctx, toolchain)
-    args.add("--codegen=opt-level=" + compilation_mode.opt_level)
-    args.add("--codegen=debuginfo=" + compilation_mode.debug_info)
-
-    args.add("--emit=dep-info,link")
-    args.add("--color=always")
-    args.add("--target=" + toolchain.target_triple)
-    if hasattr(ctx.attr, "crate_features"):
-        args.add_all(getattr(ctx.attr, "crate_features"), before_each = "--cfg", format_each = 'feature="%s"')
-    if hasattr(ctx.attr, "linker_script") and linker_script != None:
-        args.add(linker_script.path, format = "--codegen=link-arg=-T%s")
-    args.add_all(rust_flags)
-    args.add_all(getattr(ctx.attr, "rustc_flags", []))
-    add_edition_flags(args, crate_info)
-
-    # Link!
-    rpaths = _compute_rpaths(toolchain, output_dir, dep_info)
-    ld, link_args = _get_linker_and_args(ctx, rpaths)
-    args.add("--codegen=linker=" + ld)
-    args.add_joined("--codegen", link_args, join_with = " ", format_joined = "link-args=%s")
-
-    add_native_link_flags(args, dep_info)
-
-    add_crate_link_flags(args, dep_info)
+    args = _make_args(ctx, crate_info, output_hash, toolchain, linker_script, rust_flags, dep_info)
 
     # We awkwardly construct this command because we cannot reference $PWD from ctx.actions.run(executable=toolchain.rustc)
     out_dir = _create_out_dir_action(ctx)
@@ -299,6 +342,26 @@ def rustc_compile_action(
         progress_message = "Compiling Rust {} {} ({} files)".format(crate_info.type, ctx.label.name, len(crate_info.srcs)),
     )
 
+    # Proc macro crates need to be compiled only for the host and reused for both wasm and native.
+    # Therefore, if this is a proc-macro crate, don't compile anything for wasm.
+    # Also make sure we requested wasm output.
+    if crate_info.type != "proc-macro" and wasm_toolchain:
+        wasm_command = '{}{}{} "$@" --remap-path-prefix="$(pwd)"=__bazel_redacted_pwd'.format(
+            manifest_dir_env,
+            out_dir_env,
+            wasm_toolchain.rustc.path,
+        )
+        wasm_args = _make_args(ctx, crate_info, wasm_output_hash, wasm_toolchain, linker_script, rust_flags, dep_info)
+        ctx.actions.run_shell(
+            command = wasm_command,
+            inputs = wasm_compile_inputs,
+            outputs = [crate_info.wasm_output],
+            env = _get_rustc_env(ctx, wasm_toolchain),
+            arguments = [wasm_args],
+            mnemonic = "Rustc",
+            progress_message = "Compiling Rust WebAssembly {} {} ({} files)".format(crate_info.type, ctx.label.name, len(crate_info.srcs)),
+        )
+
     runfiles = ctx.runfiles(
         files = dep_info.transitive_dylibs.to_list() + getattr(ctx.files, "data", []),
         collect_data = True,
@@ -311,6 +374,7 @@ def rustc_compile_action(
             # nb. This field is required for cc_library to depend on our output.
             files = depset([crate_info.output]),
             runfiles = runfiles,
+            executable = crate_info.output if crate_info.type == "bin" else None
         ),
     ]
 
@@ -373,6 +437,21 @@ def _crate_to_link_flag(crate_info):
 
 def _get_crate_dirname(crate):
     return crate.output.dirname
+
+def add_wasm_crate_link_flags(args, dep_info):
+    args.add_all(dep_info.direct_crates, map_each = _wasm_crate_to_link_flag)
+    args.add_all(
+        dep_info.transitive_crates,
+        map_each = _get_wasm_crate_dirname,
+        uniquify = True,
+        format_each = "-Ldependency=%s",
+    )
+
+def _wasm_crate_to_link_flag(crate_info):
+    return ["--extern", "{}={}".format(crate_info.name, crate_info.wasm_output.path)]
+
+def _get_wasm_crate_dirname(crate):
+    return crate.wasm_output.dirname
 
 def add_native_link_flags(args, dep_info):
     native_libs = depset(transitive = [dep_info.transitive_dylibs, dep_info.transitive_staticlibs])

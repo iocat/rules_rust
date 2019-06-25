@@ -22,6 +22,10 @@ This repository provides rules for building [Rust][rust] projects with [Bazel](h
   </ul>
 </div>
 
+#### WebAssembly
+
+All `rust_binary` rules also produce an optional `.wasm` file which can be requested like `@examples//hello_world_wasm:hello_world_wasm.wasm`.
+
 ### Protobuf
 <div class="toc">
   <ul>

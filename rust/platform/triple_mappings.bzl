@@ -7,6 +7,7 @@ _CPU_ARCH_TO_BUILTIN_PLAT_SUFFIX = {
     "i686": "x86_32",
     "s390x": "s390x",
     "asmjs": None,
+    "wasm32": None,
     "i386": None,
     "i586": None,
     "powerpc64": None,
@@ -28,6 +29,7 @@ _SYSTEM_TO_BUILTIN_SYS_SUFFIX = {
     "ios": "ios",
     "android": "android",
     "emscripten": None,
+    "unknown": None,
     "nacl": None,
     "bitrig": None,
     "dragonfly": None,
@@ -43,6 +45,7 @@ _SYSTEM_TO_BINARY_EXT = {
     "darwin": "",
     "windows": ".exe",
     "emscripten": ".js",
+    "unknown": "",
 }
 
 _SYSTEM_TO_STATICLIB_EXT = {
@@ -52,6 +55,7 @@ _SYSTEM_TO_STATICLIB_EXT = {
     # TODO(acmcarther): To be verified
     "windows": ".lib",
     "emscripten": ".js",
+    "unknown": "",
 }
 
 _SYSTEM_TO_DYLIB_EXT = {
@@ -61,6 +65,7 @@ _SYSTEM_TO_DYLIB_EXT = {
     # TODO(acmcarther): To be verified
     "windows": ".dll",
     "emscripten": ".js",
+    "unknown": ".wasm",
 }
 
 def cpu_arch_to_constraints(cpu_arch):

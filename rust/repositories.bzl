@@ -145,20 +145,21 @@ rust_toolchain(
         target_triple = target_triple,
     )
 
-def BUILD_for_toolchain(name, parent_workspace_name, exec_triple, target_triple):
+def BUILD_for_toolchain(name, parent_workspace_name, exec_triple, target_triple, toolchain_type):
     return """
 toolchain(
     name = "{name}",
     exec_compatible_with = {exec_constraint_sets_serialized},
     target_compatible_with = {target_constraint_sets_serialized},
     toolchain = "@{parent_workspace_name}//:{name}_impl",
-    toolchain_type = "@io_bazel_rules_rust//rust:toolchain",
+    toolchain_type = "@io_bazel_rules_rust//rust:{toolchain_type}",
 )
 """.format(
         name = name,
         exec_constraint_sets_serialized = serialized_constraint_set_from_triple(exec_triple),
         target_constraint_sets_serialized = serialized_constraint_set_from_triple(target_triple),
         parent_workspace_name = parent_workspace_name,
+        toolchain_type = toolchain_type,
     )
 
 def produce_tool_suburl(tool_name, target_triple, version, iso_date = None):
@@ -289,6 +290,8 @@ def _rust_toolchain_repository_impl(ctx):
     for target_triple in [ctx.attr.exec_triple] + ctx.attr.extra_target_triples:
         BUILD_components.append(_load_rust_stdlib(ctx, target_triple))
 
+    BUILD_components.append(_load_rust_stdlib(ctx, "wasm32-unknown-unknown"))
+
     ctx.file("WORKSPACE", "")
     ctx.file("BUILD", "\n".join(BUILD_components))
 
@@ -303,7 +306,21 @@ def _rust_toolchain_repository_proxy_impl(ctx):
             exec_triple = ctx.attr.exec_triple,
             parent_workspace_name = ctx.attr.parent_workspace_name,
             target_triple = target_triple,
+            toolchain_type = "toolchain",
         ))
+
+    BUILD_components.append(BUILD_for_toolchain(
+        name = "{toolchain_prefix}_wasm32-unknown-unknown".format(
+            toolchain_prefix = ctx.attr.toolchain_name_prefix,
+        ),
+        exec_triple = ctx.attr.exec_triple,
+        parent_workspace_name = ctx.attr.parent_workspace_name,
+        # Technically we should say it's compatible with wasm32-unknown-unknown but in practice we
+        # want to be able to produce wasm output when targeting the host computer (e.g. for building
+        # a docker image). Thus we make this the exec triple.
+        target_triple = ctx.attr.exec_triple,
+        toolchain_type = "wasm_toolchain",
+    ))
 
     ctx.file("WORKSPACE", "")
     ctx.file("BUILD", "\n".join(BUILD_components))
@@ -391,7 +408,7 @@ def rust_repository_set(name, version, exec_triple, extra_target_triples, iso_da
     )
 
     all_toolchain_names = []
-    for target_triple in [exec_triple] + extra_target_triples:
+    for target_triple in [exec_triple, "wasm32-unknown-unknown"] + extra_target_triples:
         all_toolchain_names.append("@{name}_toolchains//:{toolchain_name_prefix}_{triple}".format(
             name = name,
             toolchain_name_prefix = DEFAULT_TOOLCHAIN_NAME_PREFIX,
