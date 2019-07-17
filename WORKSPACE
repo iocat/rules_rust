@@ -59,6 +59,8 @@ rules_sass_dependencies()
 
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "npm_install")
 node_repositories()
+
+# Dependencies for the @examples//hello_world_wasm example.
 npm_install(
     name = "npm",
     package_json = "//:package.json",
