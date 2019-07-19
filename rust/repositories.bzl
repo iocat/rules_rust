@@ -145,21 +145,20 @@ rust_toolchain(
         target_triple = target_triple,
     )
 
-def BUILD_for_toolchain(name, parent_workspace_name, exec_triple, target_triple, toolchain_type):
+def BUILD_for_toolchain(name, parent_workspace_name, exec_triple, target_triple):
     return """
 toolchain(
     name = "{name}",
     exec_compatible_with = {exec_constraint_sets_serialized},
     target_compatible_with = {target_constraint_sets_serialized},
     toolchain = "@{parent_workspace_name}//:{name}_impl",
-    toolchain_type = "@io_bazel_rules_rust//rust:{toolchain_type}",
+    toolchain_type = "@io_bazel_rules_rust//rust:toolchain",
 )
 """.format(
         name = name,
         exec_constraint_sets_serialized = serialized_constraint_set_from_triple(exec_triple),
         target_constraint_sets_serialized = serialized_constraint_set_from_triple(target_triple),
         parent_workspace_name = parent_workspace_name,
-        toolchain_type = toolchain_type,
     )
 
 def produce_tool_suburl(tool_name, target_triple, version, iso_date = None):
@@ -306,7 +305,6 @@ def _rust_toolchain_repository_proxy_impl(ctx):
             exec_triple = ctx.attr.exec_triple,
             parent_workspace_name = ctx.attr.parent_workspace_name,
             target_triple = target_triple,
-            toolchain_type = "toolchain",
         ))
 
     BUILD_components.append(BUILD_for_toolchain(
@@ -315,11 +313,7 @@ def _rust_toolchain_repository_proxy_impl(ctx):
         ),
         exec_triple = ctx.attr.exec_triple,
         parent_workspace_name = ctx.attr.parent_workspace_name,
-        # Technically we should say it's compatible with wasm32-unknown-unknown but in practice we
-        # want to be able to produce wasm output when targeting the host computer (e.g. for building
-        # a docker image). Thus we make this the exec triple.
-        target_triple = ctx.attr.exec_triple,
-        toolchain_type = "wasm_toolchain",
+        target_triple = "wasm32-unknown-unknown",
     ))
 
     ctx.file("WORKSPACE", "")
@@ -417,3 +411,4 @@ def rust_repository_set(name, version, exec_triple, extra_target_triples, iso_da
 
     # Register toolchains
     native.register_toolchains(*all_toolchain_names)
+    native.register_toolchains("@io_bazel_rules_rust//rust/private/dummy_cc_toolchain:dummy_cc_wasm32_toolchain")

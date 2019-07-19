@@ -146,21 +146,14 @@ def _rust_proto_compile(protos, descriptor_sets, imports, crate_name, ctx, grpc,
 
     # And simulate rust_library behavior
     output_hash = repr(hash(lib_rs.path))
-    wasm_output_hash = output_hash + ".wasm"
     rust_lib = ctx.actions.declare_file("%s/lib%s-%s.rlib" % (
         output_dir,
         crate_name,
         output_hash,
     ))
-    rust_wasm_lib = ctx.actions.declare_file("%s/lib%s-%s.rlib" % (
-        output_dir,
-        crate_name,
-        wasm_output_hash,
-    ))
     result = rustc_compile_action(
         ctx = ctx,
         toolchain = find_toolchain(ctx),
-        wasm_toolchain = ctx.toolchains["@io_bazel_rules_rust//rust:wasm_toolchain"],
         crate_info = CrateInfo(
             name = crate_name,
             type = "rlib",
@@ -168,11 +161,9 @@ def _rust_proto_compile(protos, descriptor_sets, imports, crate_name, ctx, grpc,
             srcs = srcs,
             deps = compile_deps,
             output = rust_lib,
-            wasm_output = rust_wasm_lib,
             edition = proto_toolchain.edition,
         ),
         output_hash = output_hash,
-        wasm_output_hash = wasm_output_hash,
     )
     return result
 
@@ -232,7 +223,6 @@ rust_proto_library = rule(
     toolchains = [
         "@io_bazel_rules_rust//proto:toolchain",
         "@io_bazel_rules_rust//rust:toolchain",
-        "@io_bazel_rules_rust//rust:wasm_toolchain",
         "@bazel_tools//tools/cpp:toolchain_type",
     ],
     doc = """
@@ -293,7 +283,6 @@ rust_grpc_library = rule(
     toolchains = [
         "@io_bazel_rules_rust//proto:toolchain",
         "@io_bazel_rules_rust//rust:toolchain",
-        "@io_bazel_rules_rust//rust:wasm_toolchain",
         "@bazel_tools//tools/cpp:toolchain_type",
     ],
     doc = """

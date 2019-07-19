@@ -7,7 +7,6 @@ _CPU_ARCH_TO_BUILTIN_PLAT_SUFFIX = {
     "i686": "x86_32",
     "s390x": "s390x",
     "asmjs": None,
-    "wasm32": None,
     "i386": None,
     "i586": None,
     "powerpc64": None,
@@ -29,7 +28,6 @@ _SYSTEM_TO_BUILTIN_SYS_SUFFIX = {
     "ios": "ios",
     "android": "android",
     "emscripten": None,
-    "unknown": None,
     "nacl": None,
     "bitrig": None,
     "dragonfly": None,
@@ -124,6 +122,9 @@ def triple_to_constraint_set(triple):
 
     if len(component_parts) == 4:
         abi = component_parts[3]
+
+    if cpu_arch == "wasm32":
+        return ["@io_bazel_rules_rust//rust/platform:wasm32"]
 
     constraint_set = []
     constraint_set += cpu_arch_to_constraints(cpu_arch)

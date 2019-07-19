@@ -24,7 +24,7 @@ rust_binary(
 
 rust_wasm_bindgen(
     name = "hello_world_wasm_bindgen",
-    wasm_file = ":hello_world_wasm.wasm"
+    wasm_file = ":hello_world_wasm"
 )
 
 jasmine_node_test(

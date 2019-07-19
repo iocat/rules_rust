@@ -14,6 +14,7 @@
 
 load("@io_bazel_rules_rust//rust:private/rustc.bzl", "CrateInfo", "rustc_compile_action")
 load("@io_bazel_rules_rust//rust:private/utils.bzl", "find_toolchain")
+load("@io_bazel_rules_rust//rust:private/transitions.bzl", "wasm_transition")
 
 _OLD_INLINE_TEST_CRATE_MSG = """
 --------------------------------------------------------------------------------
@@ -98,7 +99,6 @@ def _rust_library_impl(ctx):
     lib_rs = _crate_root_src(ctx)
 
     toolchain = find_toolchain(ctx)
-    wasm_toolchain = ctx.toolchains["@io_bazel_rules_rust//rust:wasm_toolchain"]
 
     # Determine unique hash for this rlib
     output_hash = _determine_output_hash(lib_rs)
@@ -111,26 +111,9 @@ def _rust_library_impl(ctx):
     )
     rust_lib = ctx.actions.declare_file(rust_lib_name)
 
-    # proc-macro crates must be built with "host" configuration because they need to be run.
-    # Therefore we reuse the proc macro crate built for the host configuration.
-    if ctx.attr.crate_type != "proc-macro":
-        wasm_output_hash = output_hash + ".wasm"
-
-        rust_wasm_lib_name = _determine_lib_name(
-            ctx.attr.name,
-            ctx.attr.crate_type,
-            toolchain,
-            wasm_output_hash,
-        )
-        rust_wasm_lib = ctx.actions.declare_file(rust_wasm_lib_name)
-    else:
-        wasm_output_hash = output_hash
-        rust_wasm_lib = rust_lib
-
     return rustc_compile_action(
         ctx = ctx,
         toolchain = toolchain,
-        wasm_toolchain = wasm_toolchain,
         crate_info = CrateInfo(
             name = ctx.label.name,
             type = ctx.attr.crate_type,
@@ -138,29 +121,29 @@ def _rust_library_impl(ctx):
             srcs = ctx.files.srcs,
             deps = ctx.attr.deps,
             output = rust_lib,
-            wasm_output = rust_wasm_lib,
             edition = _get_edition(ctx, toolchain),
         ),
         output_hash = output_hash,
-        wasm_output_hash = wasm_output_hash,
     )
 
 def _rust_binary_impl(ctx):
     toolchain = find_toolchain(ctx)
-    wasm_toolchain = ctx.toolchains["@io_bazel_rules_rust//rust:wasm_toolchain"]
+
+    if (toolchain.target_arch == "wasm32"):
+        output = ctx.actions.declare_file(ctx.label.name + ".wasm")
+    else:
+        output = ctx.actions.declare_file(ctx.label.name)
 
     return rustc_compile_action(
         ctx = ctx,
         toolchain = toolchain,
-        wasm_toolchain = wasm_toolchain,
         crate_info = CrateInfo(
             name = ctx.label.name,
             type = "bin",
             root = _crate_root_src(ctx, "main.rs"),
             srcs = ctx.files.srcs,
             deps = ctx.attr.deps,
-            output = ctx.actions.declare_file(ctx.label.name),
-            wasm_output = ctx.actions.declare_file(ctx.label.name + ".wasm"),
+            output = output,
             edition = _get_edition(ctx, toolchain),
         ),
     )
@@ -186,7 +169,6 @@ def _rust_test_common(ctx, test_binary):
             srcs = crate.srcs + ctx.files.srcs,
             deps = crate.deps + ctx.attr.deps,
             output = test_binary,
-            wasm_output = None,
             edition = crate.edition,
         )
     elif len(ctx.attr.deps) == 1 and len(ctx.files.srcs) == 0:
@@ -211,7 +193,6 @@ def _rust_test_common(ctx, test_binary):
     return rustc_compile_action(
         ctx = ctx,
         toolchain = toolchain,
-        wasm_toolchain = None,
         crate_info = target,
         rust_flags = ["--test"],
     )
@@ -339,6 +320,9 @@ _rust_library_attrs = {
         """),
         default = "rlib",
     ),
+    "_whitelist_function_transition": attr.label(
+        default = "//tools/whitelists/function_transition_whitelist",
+    ),
 }
 
 _rust_test_attrs = {
@@ -359,9 +343,9 @@ rust_library = rule(
                  _rust_library_attrs.items()),
     fragments = ["cpp"],
     host_fragments = ["cpp"],
+    cfg = wasm_transition,
     toolchains = [
         "@io_bazel_rules_rust//rust:toolchain",
-        "@io_bazel_rules_rust//rust:wasm_toolchain",
         "@bazel_tools//tools/cpp:toolchain_type"
     ],
     doc = """
@@ -448,12 +432,8 @@ rust_binary = rule(
     host_fragments = ["cpp"],
     toolchains = [
         "@io_bazel_rules_rust//rust:toolchain",
-        "@io_bazel_rules_rust//rust:wasm_toolchain",
         "@bazel_tools//tools/cpp:toolchain_type"
     ],
-    outputs = {
-        "wasm": "%{name}.wasm",
-    },
     doc = """
 Builds a Rust binary crate.
 

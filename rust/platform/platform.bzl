@@ -80,20 +80,14 @@ def declare_config_settings():
             constraint_values = triple_to_constraint_set(triple),
         )
 
-    native.constraint_setting(name = "extra_target_platform_cpu")
-    native.constraint_setting(name = "extra_target_platform_system")
     native.constraint_value(
-        name = "constraint_cpu_wasm32",
-        constraint_setting = ":extra_target_platform_cpu"
+        name = "wasm32",
+        constraint_setting = "@platforms//cpu"
     )
-    native.constraint_value(
-        name = "constraint_system_unknown",
-        constraint_setting = ":extra_target_platform_system"
-    )
+
     native.platform(
         name = "wasm",
         constraint_values = [
-            "@io_bazel_rules_rust//rust/platform:constraint_cpu_wasm32",
-            "@io_bazel_rules_rust//rust/platform:constraint_system_unknown",
+            "@io_bazel_rules_rust//rust/platform:wasm32",
         ]
     )

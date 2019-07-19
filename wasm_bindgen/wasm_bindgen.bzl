@@ -14,6 +14,7 @@
 
 load("@io_bazel_rules_rust//rust:rust.bzl", "rust_library")
 load("@io_bazel_rules_rust//rust:private/legacy_cc_starlark_api_shim.bzl", "get_libs_for_static_executable")
+load("@io_bazel_rules_rust//rust:private/transitions.bzl", "wasm_bindgen_transition")
 
 def _rust_wasm_bindgen_impl(ctx):
     toolchain = ctx.toolchains["@io_bazel_rules_rust//wasm_bindgen:wasm_bindgen_toolchain"]
@@ -46,9 +47,13 @@ rust_wasm_bindgen = rule(
         "wasm_file": attr.label(
             doc = "The .wasm file to generate bindings for.",
             allow_single_file = True,
+            cfg = wasm_bindgen_transition,
         ),
         "bindgen_flags": attr.string_list(
             doc = "Flags to pass directly to the bindgen executable. See https://github.com/rustwasm/wasm-bindgen/ for details.",
+        ),
+        "_whitelist_function_transition": attr.label(
+            default = "//tools/whitelists/function_transition_whitelist",
         ),
     },
     outputs = {

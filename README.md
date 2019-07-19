@@ -24,7 +24,12 @@ This repository provides rules for building [Rust][rust] projects with [Bazel](h
 
 #### WebAssembly
 
-All `rust_binary` rules also produce an optional `.wasm` file which can be requested like `@examples//hello_world_wasm:hello_world_wasm.wasm`.
+To build a `rust_binary` for wasm32-unknown-unknown add the `--platforms=//rust/platform:wasm` flag.
+
+    bazel build @examples//hello_world_wasm --platforms=//rust/platform:wasm
+
+`rust_wasm_bindgen` will automatically transition to the wasm platform and can be used when
+building wasm code for the host target.
 
 ### Protobuf
 <div class="toc">
