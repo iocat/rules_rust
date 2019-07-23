@@ -23,31 +23,27 @@ load(
 )
 
 
-# Unsupported target "build-script-build" with type "custom-build" omitted
-# Unsupported target "headless" with type "test" omitted
-# Unsupported target "non_wasm" with type "test" omitted
-# Unsupported target "std-crate-no-std-dep" with type "test" omitted
-# Unsupported target "unwrap_throw" with type "test" omitted
-# Unsupported target "wasm" with type "test" omitted
 
 rust_library(
-    name = "wasm_bindgen",
+    name = "wasm_bindgen_macro_support",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__wasm_bindgen_macro__0_2_41//:wasm_bindgen_macro",
+        "@raze__proc_macro2__0_4_30//:proc_macro2",
+        "@raze__quote__0_6_12//:quote",
+        "@raze__syn__0_15_43//:syn",
+        "@raze__wasm_bindgen_backend__0_2_48//:wasm_bindgen_backend",
+        "@raze__wasm_bindgen_shared__0_2_48//:wasm_bindgen_shared",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.41",
+    version = "0.2.48",
     crate_features = [
-        "default",
         "spans",
-        "std",
-        "wasm-bindgen-macro",
+        "wasm-bindgen-backend",
     ],
 )
 

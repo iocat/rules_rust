@@ -34,7 +34,7 @@ rust_library(
         "@raze__heck__0_3_1//:heck",
         "@raze__proc_macro2__0_4_30//:proc_macro2",
         "@raze__quote__0_6_12//:quote",
-        "@raze__syn__0_15_33//:syn",
+        "@raze__syn__0_15_43//:syn",
     ],
     rustc_flags = [
         "--cap-lints=allow",

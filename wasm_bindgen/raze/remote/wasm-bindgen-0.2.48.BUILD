@@ -6,13 +6,13 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 package(default_visibility = [
   # Public for visibility by "@raze__crate__version//" targets.
   #
-  # Prefer access through "//bindgen/raze", which limits external
+  # Prefer access through "//wasm_bindgen/raze", which limits external
   # visibility to explicit Cargo.toml dependencies.
   "//visibility:public",
 ])
 
 licenses([
-  "notice", # "Apache-2.0"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -24,34 +24,30 @@ load(
 
 
 # Unsupported target "build-script-build" with type "custom-build" omitted
+# Unsupported target "headless" with type "test" omitted
+# Unsupported target "non_wasm" with type "test" omitted
+# Unsupported target "std-crate-no-std-dep" with type "test" omitted
+# Unsupported target "unwrap_throw" with type "test" omitted
+# Unsupported target "wasm" with type "test" omitted
 
 rust_library(
-    name = "clang_sys",
+    name = "wasm_bindgen",
     crate_root = "src/lib.rs",
     crate_type = "lib",
-    edition = "2015",
+    edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__glob__0_2_11//:glob",
-        "@raze__libc__0_2_48//:libc",
-        "@raze__libloading__0_5_0//:libloading",
+        "@raze__wasm_bindgen_macro__0_2_48//:wasm_bindgen_macro",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.23.0",
+    version = "0.2.48",
     crate_features = [
-        "clang_6_0",
-        "gte_clang_3_6",
-        "gte_clang_3_7",
-        "gte_clang_3_8",
-        "gte_clang_3_9",
-        "gte_clang_4_0",
-        "gte_clang_5_0",
-        "gte_clang_6_0",
-        "libloading",
-        "runtime",
+        "default",
+        "spans",
+        "std",
+        "wasm-bindgen-macro",
     ],
 )
 
-# Unsupported target "lib" with type "test" omitted

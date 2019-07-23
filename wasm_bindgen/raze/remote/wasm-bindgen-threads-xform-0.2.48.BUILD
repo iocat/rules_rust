@@ -25,22 +25,20 @@ load(
 
 
 rust_library(
-    name = "wasm_bindgen_macro",
+    name = "wasm_bindgen_threads_xform",
     crate_root = "src/lib.rs",
-    crate_type = "proc-macro",
-    edition = "2015",
+    crate_type = "lib",
+    edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__quote__0_6_12//:quote",
-        "@raze__wasm_bindgen_macro_support__0_2_40//:wasm_bindgen_macro_support",
+        "@raze__failure__0_1_5//:failure",
+        "@raze__walrus__0_8_0//:walrus",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.40",
+    version = "0.2.48",
     crate_features = [
-        "spans",
-        "wasm-bindgen-macro-support",
     ],
 )
 

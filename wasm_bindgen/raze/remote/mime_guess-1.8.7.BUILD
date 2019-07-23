@@ -48,14 +48,14 @@ genrule(
     tools = [
       ":mime_guess_build_script",
     ],
-    local = 1,
-    cmd = "mkdir -p mime_guess_out_dir_outputs/;"
+    tags = ["no-sandbox"],
+    cmd = "mkdir -p $$(dirname $@)/mime_guess_out_dir_outputs/;"
         + " (export CARGO_MANIFEST_DIR=\"$$PWD/$$(dirname $(location :Cargo.toml))\";"
         # TODO(acmcarther): This needs to be revisited as part of the cross compilation story.
         #                   See also: https://github.com/google/cargo-raze/pull/54
         + " export TARGET='x86_64-unknown-linux-gnu';"
         + " export RUST_BACKTRACE=1;"
-        + " export OUT_DIR=$$PWD/mime_guess_out_dir_outputs;"
+        + " export OUT_DIR=$$PWD/$$(dirname $@)/mime_guess_out_dir_outputs;"
         + " export BINARY_PATH=\"$$PWD/$(location :mime_guess_build_script)\";"
         + " export OUT_TAR=$$PWD/$@;"
         + " cd $$(dirname $(location :Cargo.toml)) && $$BINARY_PATH && tar -czf $$OUT_TAR -C $$OUT_DIR .)"

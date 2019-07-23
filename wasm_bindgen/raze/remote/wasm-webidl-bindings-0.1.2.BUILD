@@ -6,14 +6,13 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 package(default_visibility = [
   # Public for visibility by "@raze__crate__version//" targets.
   #
-  # Prefer access through "//bindgen/raze", which limits external
+  # Prefer access through "//wasm_bindgen/raze", which limits external
   # visibility to explicit Cargo.toml dependencies.
   "//visibility:public",
 ])
 
 licenses([
-  "notice", # "MIT"
-  "unencumbered", # "Unlicense"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -24,19 +23,25 @@ load(
 )
 
 
+# Unsupported target "readme_up_to_date" with type "test" omitted
+# Unsupported target "tests" with type "test" omitted
 
 rust_library(
-    name = "winapi_util",
+    name = "wasm_webidl_bindings",
     crate_root = "src/lib.rs",
     crate_type = "lib",
-    edition = "2015",
+    edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
+        "@raze__failure__0_1_5//:failure",
+        "@raze__id_arena__2_2_1//:id_arena",
+        "@raze__leb128__0_2_4//:leb128",
+        "@raze__walrus__0_8_0//:walrus",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.1.1",
+    version = "0.1.2",
     crate_features = [
     ],
 )

@@ -40,6 +40,30 @@ def _rust_wasm_bindgen_impl(ctx):
         arguments = [args],
     )
 
+    return struct(
+        files = depset([
+            ctx.outputs.bindgen_wasm_module,
+            ctx.outputs.bindgen_typescript_bindings,
+            ctx.outputs.typescript_bindings,
+            ctx.outputs.javascript_bindings,
+        ]),
+        typescript = struct(
+            declarations = depset([
+                ctx.outputs.typescript_bindings,
+                ctx.outputs.bindgen_typescript_bindings
+            ]),
+            transitive_declarations = depset([
+                ctx.outputs.typescript_bindings,
+                ctx.outputs.bindgen_typescript_bindings
+            ]),
+            type_blacklisted_declarations = depset(),
+            es5_sources = depset([ctx.outputs.javascript_bindings]),
+            es6_sources = depset([ctx.outputs.javascript_bindings]),
+            transitive_es5_sources = depset(depset([ctx.outputs.javascript_bindings])),
+            transitive_es6_sources = depset(depset([ctx.outputs.javascript_bindings])),
+        ),
+    )
+
 rust_wasm_bindgen = rule(
     _rust_wasm_bindgen_impl,
     doc = "Generates javascript and typescript bindings for a webassembly module.",

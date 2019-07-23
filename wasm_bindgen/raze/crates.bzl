@@ -971,12 +971,12 @@ def raze_fetch_remote_crates():
     )
 
     _new_http_archive(
-        name = "raze__syn__0_15_39",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/syn/syn-0.15.39.crate",
+        name = "raze__syn__0_15_43",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/syn/syn-0.15.43.crate",
         type = "tar.gz",
-        sha256 = "b4d960b829a55e56db167e861ddb43602c003c7be0bee1d345021703fac2fb7c",
-        strip_prefix = "syn-0.15.39",
-        build_file = Label("//wasm_bindgen/raze/remote:syn-0.15.39.BUILD")
+        sha256 = "ee06ea4b620ab59a2267c6b48be16244a3389f8bfa0986bdd15c35b890b00af3",
+        strip_prefix = "syn-0.15.43",
+        build_file = Label("//wasm_bindgen/raze/remote:syn-0.15.43.BUILD")
     )
 
     _new_http_archive(
@@ -1169,120 +1169,129 @@ def raze_fetch_remote_crates():
     )
 
     _new_http_archive(
-        name = "raze__walrus__0_5_0",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/walrus/walrus-0.5.0.crate",
+        name = "raze__walrus__0_8_0",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/walrus/walrus-0.8.0.crate",
         type = "tar.gz",
-        sha256 = "99045d114288366c1b6fb7ef62999a3aabaa79a90b851f9789149e005dbedc27",
-        strip_prefix = "walrus-0.5.0",
-        build_file = Label("//wasm_bindgen/raze/remote:walrus-0.5.0.BUILD")
+        sha256 = "9b751c638c5c86d92af28a3a68ce879b719c7e1cad75c66a3377ce386b9d705f",
+        strip_prefix = "walrus-0.8.0",
+        build_file = Label("//wasm_bindgen/raze/remote:walrus-0.8.0.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__walrus_macro__0_5_0",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/walrus-macro/walrus-macro-0.5.0.crate",
+        name = "raze__walrus_macro__0_8_0",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/walrus-macro/walrus-macro-0.8.0.crate",
         type = "tar.gz",
-        sha256 = "d92de94064111aca5840e5ab5a72df9447adeed24fe8b75b43160904c04ddfa3",
-        strip_prefix = "walrus-macro-0.5.0",
-        build_file = Label("//wasm_bindgen/raze/remote:walrus-macro-0.5.0.BUILD")
+        sha256 = "30dcc194dbffb8025ca1b42a92f8c33ac28b1025cd771f0d884f89508b5fb094",
+        strip_prefix = "walrus-macro-0.8.0",
+        build_file = Label("//wasm_bindgen/raze/remote:walrus-macro-0.8.0.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen/wasm-bindgen-0.2.40.crate",
+        name = "raze__wasm_bindgen__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen/wasm-bindgen-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "9742fc4860f47bede1090a5e4b0cfc33afcd70cfdf45dd28f2cfb02d4662b0dd",
-        strip_prefix = "wasm-bindgen-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-0.2.40.BUILD")
+        sha256 = "4de97fa1806bb1a99904216f6ac5e0c050dc4f8c676dc98775047c38e5c01b55",
+        strip_prefix = "wasm-bindgen-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_anyref_xform__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-anyref-xform/wasm-bindgen-anyref-xform-0.2.40.crate",
+        name = "raze__wasm_bindgen_anyref_xform__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-anyref-xform/wasm-bindgen-anyref-xform-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "4d0378821cbcec0c9278998eb57c7b7f302af04f1bac718daebbb2fb76e0e7ab",
-        strip_prefix = "wasm-bindgen-anyref-xform-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-anyref-xform-0.2.40.BUILD")
+        sha256 = "96b9065758e62fd7a445c1b37f427edc69771c400f13771ff0653e49fd39a8e7",
+        strip_prefix = "wasm-bindgen-anyref-xform-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-anyref-xform-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_backend__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-backend/wasm-bindgen-backend-0.2.40.crate",
+        name = "raze__wasm_bindgen_backend__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-backend/wasm-bindgen-backend-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "c6d7f35ecbb4180513cdb9b298543321bcb278670730415cbb3205ff2c66a477",
-        strip_prefix = "wasm-bindgen-backend-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-backend-0.2.40.BUILD")
+        sha256 = "5d82c170ef9f5b2c63ad4460dfcee93f3ec04a9a36a4cc20bc973c39e59ab8e3",
+        strip_prefix = "wasm-bindgen-backend-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-backend-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_cli__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-cli/wasm-bindgen-cli-0.2.40.crate",
+        name = "raze__wasm_bindgen_cli__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-cli/wasm-bindgen-cli-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "94a2b12f4f5eb4db057d7c3f9180e5c247079a33d8910bb87e0c17f9257d67a6",
-        strip_prefix = "wasm-bindgen-cli-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-cli-0.2.40.BUILD")
+        sha256 = "ceb1786f6098700f9e2b33ad640392920c84cee6e9bdd8251e44e35fac472638",
+        strip_prefix = "wasm-bindgen-cli-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-cli-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_cli_support__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-cli-support/wasm-bindgen-cli-support-0.2.40.crate",
+        name = "raze__wasm_bindgen_cli_support__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-cli-support/wasm-bindgen-cli-support-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "7200a13f0c6443c83a33694732ed8845c9d7a148550d032f8727c403a3e34851",
-        strip_prefix = "wasm-bindgen-cli-support-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-cli-support-0.2.40.BUILD")
+        sha256 = "66aae0d39c155c9bf27b3c21113120d4c47bb0193234f15b98448b7b119c87be",
+        strip_prefix = "wasm-bindgen-cli-support-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-cli-support-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_macro__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-macro/wasm-bindgen-macro-0.2.40.crate",
+        name = "raze__wasm_bindgen_macro__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-macro/wasm-bindgen-macro-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "e3c86b06bcd28e92e87d2c2ad208889b2f69ea33f79810b91ef660cc3de65a4c",
-        strip_prefix = "wasm-bindgen-macro-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-macro-0.2.40.BUILD")
+        sha256 = "f07d50f74bf7a738304f6b8157f4a581e1512cd9e9cdb5baad8c31bbe8ffd81d",
+        strip_prefix = "wasm-bindgen-macro-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-macro-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_macro_support__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-macro-support/wasm-bindgen-macro-support-0.2.40.crate",
+        name = "raze__wasm_bindgen_macro_support__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-macro-support/wasm-bindgen-macro-support-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "81d7338dd8c67e193d8ef18e5802dc03d8710456baa792c1c2e66847e57fd389",
-        strip_prefix = "wasm-bindgen-macro-support-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-macro-support-0.2.40.BUILD")
+        sha256 = "95cf8fe77e45ba5f91bc8f3da0c3aa5d464b3d8ed85d84f4d4c7cc106436b1d7",
+        strip_prefix = "wasm-bindgen-macro-support-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-macro-support-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_shared__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-shared/wasm-bindgen-shared-0.2.40.crate",
+        name = "raze__wasm_bindgen_shared__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-shared/wasm-bindgen-shared-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "0d57c3b66f2f3e4d96b50f49b7b7e2f4cfcddc88b15744433c98c5c105b26672",
-        strip_prefix = "wasm-bindgen-shared-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-shared-0.2.40.BUILD")
+        sha256 = "d9c2d4d4756b2e46d3a5422e06277d02e4d3e1d62d138b76a4c681e925743623",
+        strip_prefix = "wasm-bindgen-shared-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-shared-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_threads_xform__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-threads-xform/wasm-bindgen-threads-xform-0.2.40.crate",
+        name = "raze__wasm_bindgen_threads_xform__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-threads-xform/wasm-bindgen-threads-xform-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "e32e60f34b2af3cc5ada61d80dd1d090a1413eaaeb82770e8cdea2b2dee1e73d",
-        strip_prefix = "wasm-bindgen-threads-xform-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-threads-xform-0.2.40.BUILD")
+        sha256 = "61de14e4283261b9ce99b15bd3fb52a4c8f56a3efef4b46cf2fa11c2a180be10",
+        strip_prefix = "wasm-bindgen-threads-xform-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-threads-xform-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasm_bindgen_wasm_interpreter__0_2_40",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-wasm-interpreter/wasm-bindgen-wasm-interpreter-0.2.40.crate",
+        name = "raze__wasm_bindgen_wasm_interpreter__0_2_48",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-bindgen-wasm-interpreter/wasm-bindgen-wasm-interpreter-0.2.48.crate",
         type = "tar.gz",
-        sha256 = "2e4aac600ce425b47c567e69e03ac582212248a0d5790eab63e50ad28d513f07",
-        strip_prefix = "wasm-bindgen-wasm-interpreter-0.2.40",
-        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-wasm-interpreter-0.2.40.BUILD")
+        sha256 = "7cfc73f030ca101c85e75f5c5e2db061e762ff600edd77693c5c8581b90bdfe6",
+        strip_prefix = "wasm-bindgen-wasm-interpreter-0.2.48",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-bindgen-wasm-interpreter-0.2.48.BUILD")
     )
 
     _new_http_archive(
-        name = "raze__wasmparser__0_29_2",
-        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasmparser/wasmparser-0.29.2.crate",
+        name = "raze__wasm_webidl_bindings__0_1_2",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasm-webidl-bindings/wasm-webidl-bindings-0.1.2.crate",
         type = "tar.gz",
-        sha256 = "981a8797cf89762e0233ec45fae731cb79a4dfaee12d9f0fe6cee01e4ac58d00",
-        strip_prefix = "wasmparser-0.29.2",
-        build_file = Label("//wasm_bindgen/raze/remote:wasmparser-0.29.2.BUILD")
+        sha256 = "216c964db43e07890435d9b152e59f0f520787ebed2c0666609fe8d933c3b749",
+        strip_prefix = "wasm-webidl-bindings-0.1.2",
+        build_file = Label("//wasm_bindgen/raze/remote:wasm-webidl-bindings-0.1.2.BUILD")
+    )
+
+    _new_http_archive(
+        name = "raze__wasmparser__0_30_0",
+        url = "https://crates-io.s3-us-west-1.amazonaws.com/crates/wasmparser/wasmparser-0.30.0.crate",
+        type = "tar.gz",
+        sha256 = "566a9eefa2267a1a32af59807326e84191cdff41c3fc2efda0a790d821615b31",
+        strip_prefix = "wasmparser-0.30.0",
+        build_file = Label("//wasm_bindgen/raze/remote:wasmparser-0.30.0.BUILD")
     )
 
     _new_http_archive(

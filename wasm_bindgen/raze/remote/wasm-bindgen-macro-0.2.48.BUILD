@@ -23,22 +23,25 @@ load(
 )
 
 
+# Unsupported target "ui" with type "test" omitted
 
 rust_library(
-    name = "wasm_bindgen_threads_xform",
+    name = "wasm_bindgen_macro",
     crate_root = "src/lib.rs",
-    crate_type = "lib",
+    crate_type = "proc-macro",
     edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__failure__0_1_5//:failure",
-        "@raze__walrus__0_5_0//:walrus",
+        "@raze__quote__0_6_12//:quote",
+        "@raze__wasm_bindgen_macro_support__0_2_48//:wasm_bindgen_macro_support",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.40",
+    version = "0.2.48",
     crate_features = [
+        "spans",
+        "wasm-bindgen-macro-support",
     ],
 )
 

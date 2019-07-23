@@ -46,7 +46,7 @@ rust_binary(
       "visit",
     ],
     data = glob(["*"]),
-    version = "0.15.39",
+    version = "0.15.43",
     visibility = ["//visibility:private"],
 )
 
@@ -57,8 +57,8 @@ genrule(
     tools = [
       ":syn_build_script",
     ],
-    local = 1,
-    cmd = "mkdir -p syn_out_dir_outputs/;"
+    tags = ["no-sandbox"],
+    cmd = "mkdir -p $$(dirname $@)/syn_out_dir_outputs/;"
         + " (export CARGO_MANIFEST_DIR=\"$$PWD/$$(dirname $(location :Cargo.toml))\";"
         # TODO(acmcarther): This needs to be revisited as part of the cross compilation story.
         #                   See also: https://github.com/google/cargo-raze/pull/54
@@ -75,14 +75,12 @@ genrule(
         + " export CARGO_FEATURE_PROC_MACRO2=1;"
         + " export CARGO_FEATURE_QUOTE=1;"
         + " export CARGO_FEATURE_VISIT=1;"
-        + " export OUT_DIR=$$PWD/syn_out_dir_outputs;"
+        + " export OUT_DIR=$$PWD/$$(dirname $@)/syn_out_dir_outputs;"
         + " export BINARY_PATH=\"$$PWD/$(location :syn_build_script)\";"
         + " export OUT_TAR=$$PWD/$@;"
         + " cd $$(dirname $(location :Cargo.toml)) && $$BINARY_PATH && tar -czf $$OUT_TAR -C $$OUT_DIR .)"
 )
 
-# Unsupported target "file" with type "bench" omitted
-# Unsupported target "rust" with type "bench" omitted
 
 rust_library(
     name = "syn",
@@ -97,9 +95,10 @@ rust_library(
     ],
     rustc_flags = [
         "--cap-lints=allow",
+        "--cfg=syn_can_call_macro_by_path",
     ],
     out_dir_tar = ":syn_build_script_executor",
-    version = "0.15.39",
+    version = "0.15.43",
     crate_features = [
         "clone-impls",
         "default",

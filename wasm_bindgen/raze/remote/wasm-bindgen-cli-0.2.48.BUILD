@@ -40,18 +40,19 @@ rust_binary(
         "@raze__serde__1_0_94//:serde",
         "@raze__serde_derive__1_0_94//:serde_derive",
         "@raze__serde_json__1_0_39//:serde_json",
-        "@raze__walrus__0_5_0//:walrus",
-        "@raze__wasm_bindgen_cli_support__0_2_40//:wasm_bindgen_cli_support",
-        "@raze__wasm_bindgen_shared__0_2_40//:wasm_bindgen_shared",
+        "@raze__walrus__0_8_0//:walrus",
+        "@raze__wasm_bindgen_cli_support__0_2_48//:wasm_bindgen_cli_support",
+        "@raze__wasm_bindgen_shared__0_2_48//:wasm_bindgen_shared",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.40",
+    version = "0.2.48",
     crate_features = [
     ],
 )
 
+# Unsupported target "wasm-bindgen" with type "test" omitted
 rust_binary(
     # Prefix bin name to disambiguate from (probable) collision with lib name
     # N.B.: The exact form of this is subject to change.
@@ -69,14 +70,14 @@ rust_binary(
         "@raze__serde__1_0_94//:serde",
         "@raze__serde_derive__1_0_94//:serde_derive",
         "@raze__serde_json__1_0_39//:serde_json",
-        "@raze__walrus__0_5_0//:walrus",
-        "@raze__wasm_bindgen_cli_support__0_2_40//:wasm_bindgen_cli_support",
-        "@raze__wasm_bindgen_shared__0_2_40//:wasm_bindgen_shared",
+        "@raze__walrus__0_8_0//:walrus",
+        "@raze__wasm_bindgen_cli_support__0_2_48//:wasm_bindgen_cli_support",
+        "@raze__wasm_bindgen_shared__0_2_48//:wasm_bindgen_shared",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.40",
+    version = "0.2.48",
     crate_features = [
     ],
 )
@@ -98,14 +99,14 @@ rust_binary(
         "@raze__serde__1_0_94//:serde",
         "@raze__serde_derive__1_0_94//:serde_derive",
         "@raze__serde_json__1_0_39//:serde_json",
-        "@raze__walrus__0_5_0//:walrus",
-        "@raze__wasm_bindgen_cli_support__0_2_40//:wasm_bindgen_cli_support",
-        "@raze__wasm_bindgen_shared__0_2_40//:wasm_bindgen_shared",
+        "@raze__walrus__0_8_0//:walrus",
+        "@raze__wasm_bindgen_cli_support__0_2_48//:wasm_bindgen_cli_support",
+        "@raze__wasm_bindgen_shared__0_2_48//:wasm_bindgen_shared",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.40",
+    version = "0.2.48",
     crate_features = [
     ],
 )

@@ -23,21 +23,23 @@ load(
 )
 
 
+# Unsupported target "smoke" with type "test" omitted
 
 rust_library(
-    name = "wasm_bindgen_anyref_xform",
+    name = "wasm_bindgen_wasm_interpreter",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
         "@raze__failure__0_1_5//:failure",
-        "@raze__walrus__0_5_0//:walrus",
+        "@raze__log__0_4_6//:log",
+        "@raze__walrus__0_8_0//:walrus",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.41",
+    version = "0.2.48",
     crate_features = [
     ],
 )

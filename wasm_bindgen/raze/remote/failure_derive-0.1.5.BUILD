@@ -36,7 +36,7 @@ rust_library(
     deps = [
         "@raze__proc_macro2__0_4_30//:proc_macro2",
         "@raze__quote__0_6_12//:quote",
-        "@raze__syn__0_15_39//:syn",
+        "@raze__syn__0_15_43//:syn",
         "@raze__synstructure__0_10_2//:synstructure",
     ],
     rustc_flags = [
