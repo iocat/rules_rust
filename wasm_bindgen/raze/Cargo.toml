@@ -5,7 +5,6 @@ workspace_path = "//wasm_bindgen/raze"
 [raze.crates.wasm-bindgen-cli.'0.2.48']
 gen_buildrs = true
 extra_aliased_targets = ["cargo_bin_wasm_bindgen"]
-gen_workspace_prefix = "wasm_bindgen_raze"
 
 [raze.crates.proc-macro2.'0.4.30']
 additional_flags = [
