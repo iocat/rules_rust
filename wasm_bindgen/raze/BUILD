@@ -13,10 +13,6 @@ alias(
     actual = "@raze__wasm_bindgen__0_2_48//:wasm_bindgen",
 )
 alias(
-    name = "wasm_bindgen_cli",
-    actual = "@raze__wasm_bindgen_cli__0_2_48//:wasm_bindgen_cli",
-)
-alias(
     # Extra aliased target, from raze configuration
     # N.B.: The exact form of this is subject to change.
     name = "cargo_bin_wasm_bindgen",
